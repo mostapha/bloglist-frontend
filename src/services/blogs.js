@@ -18,8 +18,15 @@ const createBlog = async blogInfo => {
     }
   }
 
-  const response = await axios.post(baseUrl, blogInfo, config)
-  return response.data
+  try {
+    const response = await axios.post(baseUrl, blogInfo, config)
+    return response.data
+  } catch (error) {
+    if(error.response.data.error){
+      return error.response.data
+    }
+    console.error(error)
+  }
 }
 
 // eslint-disable-next-line import/no-anonymous-default-export

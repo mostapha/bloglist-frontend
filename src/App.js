@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import CreateBlog from './components/CreateBlog'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -10,6 +11,8 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+
+  const [notification, setNotification] = useState('')
 
   const LOCAL_STORAGE_KEY = 'authenticatedUser'
 
@@ -38,6 +41,7 @@ const App = () => {
 
       if (login_response.error) {
         console.log('error', login_response.error)
+        setNotification(login_response.error)
         return
       }
 
@@ -45,11 +49,14 @@ const App = () => {
       setUser(login_response)
       blogService.setToken(login_response.token)
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(login_response))
+
+      setNotification(`you are logged in as ${login_response.username}`)
     }
 
     return (
       <div>
         <h2>Log in to application</h2>
+        <Notification notification={notification} setNotification={setNotification}/>
         <form onSubmit={handleLogin}>
           <div>username: <input
             name='username'
@@ -73,14 +80,17 @@ const App = () => {
 
   const handleLogout = () => {
     setUser(null)
+    blogService.setToken(null)
     localStorage.removeItem(LOCAL_STORAGE_KEY)
+    setNotification('user logged out')
   }
 
   return (
     <div>
       <h2>blogs</h2>
+      <Notification notification={notification} setNotification={setNotification}/>
       <p>User {user.name} is logged in. <button onClick={handleLogout}>logout</button></p>
-      <CreateBlog/>
+      <CreateBlog setNotification={setNotification}/>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
