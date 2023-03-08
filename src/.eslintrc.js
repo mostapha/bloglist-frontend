@@ -37,8 +37,9 @@ module.exports = {
     'no-console': 0,
     'prefer-destructuring': 0,
     'object-property-newline': [
-      'error',{ 'allowAllPropertiesOnSameLine': true }
+      'error', { 'allowAllPropertiesOnSameLine': true }
     ],
-    'padded-blocks': ['error', 'never']
+    'padded-blocks': ['error', 'never'],
+    'comma-spacing': ['error', { 'before': false, 'after': true }]
   }
 }
