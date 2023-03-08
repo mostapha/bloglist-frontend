@@ -3,7 +3,7 @@ import FormInput from './FormInput'
 import blogService from '../services/blogs'
 import Togglable from './Togglable'
 
-const CreateBlog = ({ setNotification }) => {
+const CreateBlog = ({ setNotification, blogs, setBlogs, user }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -24,11 +24,22 @@ const CreateBlog = ({ setNotification }) => {
       return
     }
 
+    console.log('blog create result', response)
+
+    // fallback if populate is not used in the backend
+    if(!response.user.name){
+      response.user = {
+        name: user.name
+      }
+    }
+
+    setBlogs(blogs.concat(response))
+
+    setNotification(`a new blog is added (${response.title} By ${response.author})`)
+
     setTitle('')
     setAuthor('')
     setUrl('')
-    console.log('blog create result', response)
-    setNotification(`a new blog is added (${response.title} By ${response.author})`)
 
     addBlogFormRef.current.toggleVisibility()
   }
