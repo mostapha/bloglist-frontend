@@ -40,7 +40,7 @@ const Blog = ({ blog, blogs, setBlogs }) => {
 
   return (
     <li style={blogStyle}>
-      {blog.title} {blog.author} <button onClick={() => toggleVisibility()}>{toggleText}</button>
+      <b>{blog.title}</b> by {blog.author} <button onClick={() => toggleVisibility()}>{toggleText}</button>
       <div style={detailsStyle}>
         <div>{blog.url}</div>
         <div>likes: {blog.likes} <button onClick={handleLikeClick}>like</button></div>

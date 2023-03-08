@@ -94,7 +94,9 @@ const App = () => {
       {
         blogs.length !== 0
           ? <ul style={{ listStyle: 'none', padding: 0 }}>{
-            blogs.map(blog => <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} />)
+            blogs
+              .sort((b1, b2) => b2.likes - b1.likes)
+              .map(blog => <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} />)
           }</ul>
           : ''
       }
