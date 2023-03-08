@@ -29,6 +29,8 @@ const Blog = ({ blog, blogs, setBlogs, user, setNotification }) => {
   }
 
   const handleRemove = async () => {
+    if(!window.confirm(`remove ${blog.title} by ${blog.author}`)) return
+
     const response = await blogService.removeBlog(blog.id)
     if(response.error){
       setNotification(response.error)
