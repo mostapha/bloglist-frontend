@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import PropTypes from 'prop-types'
 
 const NotifcationStyle = {
   background: '#eae1f9',
@@ -24,6 +25,11 @@ const Notification = ({ setNotification, notification }) => {
   }
 
   return <div style={NotifcationStyle}>{notification}</div>
+}
+
+Notification.propTypes = {
+  setNotification: PropTypes.func.isRequired,
+  notification: PropTypes.string.isRequired
 }
 
 export default Notification

@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import FormInput from './FormInput'
 import blogService from '../services/blogs'
 import Togglable from './Togglable'
+import PropTypes from 'prop-types'
 
 const CreateBlog = ({ setNotification, blogs, setBlogs, user }) => {
   const [title, setTitle] = useState('')
@@ -57,6 +58,14 @@ const CreateBlog = ({ setNotification, blogs, setBlogs, user }) => {
       </section>
     </Togglable>
   )
+}
+
+
+CreateBlog.propTypes = {
+  setNotification: PropTypes.func.isRequired,
+  blogs: PropTypes.array.isRequired,
+  setBlogs: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
 }
 
 export default CreateBlog
