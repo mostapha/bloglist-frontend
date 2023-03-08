@@ -91,9 +91,12 @@ const App = () => {
       <Notification notification={notification} setNotification={setNotification}/>
       <p>User {user.name} is logged in. <button onClick={handleLogout}>logout</button></p>
       <CreateBlog setNotification={setNotification}/>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
+      {
+        blogs.length !== 0
+          ? <ul style={{ listStyle: 'none', padding: 0 }}>{ blogs.map(blog => <Blog key={blog.id} blog={blog} />) }</ul>
+          : ''
+      }
+
     </div>
   )
 }
