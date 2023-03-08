@@ -3,7 +3,7 @@ import blogService from '../services/blogs'
 
 const blogStyle = { marginBottom: '15px', padding: '10px', border: '1px solid #f09fff' }
 
-const Blog = ({ blog, blogs, setBlogs }) => {
+const Blog = ({ blog, blogs, setBlogs, user, setNotification }) => {
   const [expanded, setExpanded] = useState(false)
 
   const detailsStyle = {
@@ -14,15 +14,6 @@ const Blog = ({ blog, blogs, setBlogs }) => {
   const toggleVisibility = () => setExpanded(!expanded)
 
   const handleLikeClick = async () => {
-    console.log('like is clicked', blog)
-    console.log('new', {
-      user: blog.user.id,
-      likes: blog.likes + 1,
-      author: blog.author,
-      title: blog.title,
-      url: blog.url
-    })
-
     const response = await blogService.updateBlog(blog.id, {
       user: blog.user.id,
       likes: blog.likes + 1,
@@ -35,7 +26,16 @@ const Blog = ({ blog, blogs, setBlogs }) => {
     const newBlogs = [...blogs]
     newBlogs[blogIndex] = response
     setBlogs(newBlogs)
-    console.log('response', response)
+  }
+
+  const handleRemove = async () => {
+    const response = await blogService.removeBlog(blog.id)
+    if(response.error){
+      setNotification(response.error)
+      return
+    }
+
+    setBlogs(blogs.filter(b => b.id !== blog.id))
   }
 
   return (
@@ -45,6 +45,7 @@ const Blog = ({ blog, blogs, setBlogs }) => {
         <div>{blog.url}</div>
         <div>likes: {blog.likes} <button onClick={handleLikeClick}>like</button></div>
         <div>{blog.user.name}</div>
+        {blog.user.username === user.username ? <button onClick={handleRemove}>remove</button> : ''}
       </div>
     </li>
   )

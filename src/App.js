@@ -40,7 +40,6 @@ const App = () => {
       })
 
       if (login_response.error) {
-        console.log('error', login_response.error)
         setNotification(login_response.error)
         return
       }
@@ -96,7 +95,7 @@ const App = () => {
           ? <ul style={{ listStyle: 'none', padding: 0 }}>{
             blogs
               .sort((b1, b2) => b2.likes - b1.likes)
-              .map(blog => <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} />)
+              .map(blog => <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} user={user} setNotification={setNotification} />)
           }</ul>
           : ''
       }
