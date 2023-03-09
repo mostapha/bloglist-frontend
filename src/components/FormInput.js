@@ -6,7 +6,7 @@ const FormInput = ({ label, type = 'text', value, onChange }) => (
 
 FormInput.propTypes = {
   label: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
+  type: PropTypes.string,
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
 }

@@ -17,7 +17,6 @@ const Notification = ({ setNotification, notification }) => {
     return () => {
       clearTimeout(timeout)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [notification])
 
   if(notification === ''){

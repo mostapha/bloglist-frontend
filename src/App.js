@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
-import CreateBlog from './components/CreateBlog'
+import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -84,18 +84,67 @@ const App = () => {
     setNotification('user logged out')
   }
 
+
+  const handleLikeClick = async blog => {
+    const response = await blogService.updateBlog(blog.id, {
+      user: blog.user.id,
+      likes: blog.likes + 1,
+      author: blog.author,
+      title: blog.title,
+      url: blog.url
+    })
+
+    const blogIndex = blogs.findIndex(b => b.id === blog.id)
+    const newBlogs = [...blogs]
+    newBlogs[blogIndex] = response
+    setBlogs(newBlogs)
+  }
+
+  const handleRemove = async blog => {
+    if(!window.confirm(`remove ${blog.title} by ${blog.author}`)) return
+
+    const response = await blogService.removeBlog(blog.id)
+    if(response.error){
+      setNotification(response.error)
+      return
+    }
+
+    setBlogs(blogs.filter(b => b.id !== blog.id))
+  }
+
+
+  const handleBlogCreation = async (blogInfo) => {
+    const response = await blogService.createBlog(blogInfo)
+
+    if(response.error){
+      setNotification(response.error)
+      return false
+    }
+
+
+    setBlogs(blogs.concat(response))
+    setNotification(`a new blog is added (${response.title} By ${response.author})`)
+    return true
+  }
+
   return (
     <div>
       <h2>blogs</h2>
       <Notification notification={notification} setNotification={setNotification}/>
       <p>User {user.name} is logged in. <button onClick={handleLogout}>logout</button></p>
-      <CreateBlog setNotification={setNotification} blogs={blogs} setBlogs={setBlogs} user={user}/>
+      <BlogForm createBlog={handleBlogCreation}/>
       {
         blogs.length !== 0
           ? <ul style={{ listStyle: 'none', padding: 0 }}>{
             blogs
               .sort((b1, b2) => b2.likes - b1.likes)
-              .map(blog => <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} user={user} setNotification={setNotification} />)
+              .map(blog => <Blog
+                key={blog.id}
+                blog={blog}
+                user={user}
+                handleRemove={handleRemove}
+                handleLikeClick={handleLikeClick}
+              />)
           }</ul>
           : ''
       }

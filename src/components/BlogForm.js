@@ -1,10 +1,9 @@
 import { useRef, useState } from 'react'
 import FormInput from './FormInput'
-import blogService from '../services/blogs'
 import Togglable from './Togglable'
 import PropTypes from 'prop-types'
 
-const CreateBlog = ({ setNotification, blogs, setBlogs, user }) => {
+const BlogForm = ({ createBlog }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -14,35 +13,19 @@ const CreateBlog = ({ setNotification, blogs, setBlogs, user }) => {
   const handleBlogCreation = async (event) => {
     event.preventDefault()
 
-    const response = await blogService.createBlog({
+    const succeed = await createBlog({
       title,
       author,
       url
     })
 
-    if(response.error){
-      setNotification(response.error)
-      return
+    if(succeed){
+      setTitle('')
+      setAuthor('')
+      setUrl('')
+
+      addBlogFormRef.current.toggleVisibility()
     }
-
-    console.log('blog create result', response)
-
-    // fallback if populate is not used in the backend
-    if(!response.user.name){
-      response.user = {
-        name: user.name
-      }
-    }
-
-    setBlogs(blogs.concat(response))
-
-    setNotification(`a new blog is added (${response.title} By ${response.author})`)
-
-    setTitle('')
-    setAuthor('')
-    setUrl('')
-
-    addBlogFormRef.current.toggleVisibility()
   }
 
   return (
@@ -61,11 +44,8 @@ const CreateBlog = ({ setNotification, blogs, setBlogs, user }) => {
 }
 
 
-CreateBlog.propTypes = {
-  setNotification: PropTypes.func.isRequired,
-  blogs: PropTypes.array.isRequired,
-  setBlogs: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired,
+BlogForm.propTypes = {
+  createBlog: PropTypes.func.isRequired
 }
 
-export default CreateBlog
+export default BlogForm
